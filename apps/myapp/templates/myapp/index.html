@@ -5,7 +5,18 @@
         <title>Index Page</title>
     </head>
     <body>
-        <h1>Hello {{name}}!</h1>
-        <p>Your email is {{email}}</p>
+        <form class="" action="/create_pet" method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Name"><br>
+            <input type="text" name="species" placeholder="Species"><br>
+            <input type="text" name="breed" placeholder="Breed"><br>
+            <input type="number" name="age" placeholder="Age"><br>
+            <input type="submit" name="" value="Create Pet"><br>
+        </form>
+        {% if messages %}
+            {% for message in messages %}
+            <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+            {% endfor %}
+        {% endif %}
     </body>
 </html>
