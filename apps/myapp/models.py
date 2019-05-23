@@ -23,6 +23,9 @@ class PetManager(models.Manager):
         if len(form['age']) == 0:
             errors['age'] = "Age cannot be blank."
 
+        if len(form['password']) == 0:
+            errors['password'] = "Password cannot be blank."
+
         return errors
 
 
@@ -40,12 +43,13 @@ class Pet(models.Model):
     species = models.CharField(max_length=255)
     breed = models.CharField(max_length=255)
     age = models.IntegerField()
+    password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # owners = models.ManyToManyField(Owner, related_name="pets")
 
     # objects = models.Manager()
-    objects = PetManager() #overwites objects
+    objects = PetManager() #overwrites objects
 
 class Join(models.Model):
     owner = models.ForeignKey(Pet, related_name="pets", on_delete=models.CASCADE)

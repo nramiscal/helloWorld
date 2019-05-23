@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
+import bcrypt
 
 def index(request):
     context = {
@@ -26,12 +27,20 @@ def create_pet(request):
     else:
         # passed validation
         # create pet
+        hashed_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
+        print(hashed_pw)
+        pet = Pet.objects.create(name = request.POST['name'], species = request.POST['species'], breed = request.POST['breed'], age=request.POST['age'], password = hashed_pw.decode())  # <-- note the .decode()!!!
+
         # save pet's id in session
+        request.session['pet_id'] = pet.id
         # redirect to success page
         return redirect("/success")
 
 def success(request):
-    return render(request, 'myapp/success.html')
+    context = {
+        'pet' : Pet.objects.get(id = request.session['pet_id'])
+    }
+    return render(request, 'myapp/success.html', context)
 
 def name(request, name):
     context = {
